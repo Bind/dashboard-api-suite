@@ -38,8 +38,8 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/c', function(req,res ){
+
+app.use('/', function(req,res ){
 
 api.call('campaigns', 'list', { list_id: Fintech_Live, start: 0, limit: 25 }, function (error, data) {
     if (error)
