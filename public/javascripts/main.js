@@ -52,7 +52,9 @@ bar.append('text')
     .attr('dy', ".35em")
     .style('text-anchor', 'start')
     .text(function(d, i) {return mapLabel(labels[i])})
+    console.log(campaign)
     }
+
 }
 
 
