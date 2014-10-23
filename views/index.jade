@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  each campaign in data
+     div.container
+        h1= campaign.title
+        svg(class="camp-#{campaign.id} engagement")

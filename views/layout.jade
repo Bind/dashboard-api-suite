@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title= title
+    script.
+       var CAMPAIGNS = !{JSON.stringify(data)};
+    link(rel='stylesheet', href='/css/style.css')
+
+block js_load
+        script(src='/javascripts/d3.js')
+        script(src='/javascripts/main.js')
+
+body(onload="init();")
+    block content
+
