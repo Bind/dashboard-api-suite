@@ -4,6 +4,11 @@ var init = function (){
 var width = 420,
     barHeight = 20;
 
+var max = CAMPAIGNS.reduce(function(prev, v){
+    var curr = v['summary']['unique_opens']
+        if (prev < curr) return curr;
+        else return prev
+},0)
 
 for (var key in CAMPAIGNS){
 var campaign = CAMPAIGNS[key];
@@ -16,7 +21,7 @@ var labels = ['users_who_clicked',
 var data = grab(campaign['summary'], labels)
 
 var x = d3.scale.linear()
-    .domain([0, d3.max(data)])
+    .domain([0, max])
     .range([0, width]);
 
 var chart = d3.selectAll(".camp-"+ campaign.id )
@@ -64,7 +69,7 @@ return data;
 
 var mapLabel = function(label){
     var dict = {
-        'users_who_clicked':'Engaged Users',
+        'users_who_clicked':'Users who clicked through',
         'unique_opens':'Users who opened',
         'clicks':'Total Clicks',
     }
