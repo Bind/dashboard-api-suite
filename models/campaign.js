@@ -71,12 +71,21 @@ var campaignSchema = mongoose.Schema({
 		     absplit: [],
 		     timewarp: [],
 		     timeseries: [] },
-  activity: [] }
+  activity: [] })
 
-})
 
 
 // NOTE: methods must be added to the schema before compiling it with mongoose.model()
+
+campaignSchema.methods.baseStats = function baseStats(){
+	return {
+		id: this.id,
+		date: this.send_time,
+		unique_opens: this.summary.unique_opens,
+		emails_sent: this.summary.emails_sent,
+		unique_clicks: this.summary.unique_clicks,
+		}
+}
 
 var Campaign = mongoose.model('Campaign',campaignSchema);
 

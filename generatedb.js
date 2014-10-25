@@ -40,38 +40,42 @@ try {
 api.call('campaigns', 'list', {id:Fintech_Live,  }, function (error, campaigns) {
     if (error)
         console.log(error.message);
-    else
-      // console.log(campaigns.data[0]); // Do something with your data!
+    else{
+        var _series = []
+          for (var i in campaigns.data){
+           console.log(util.inspect(i))
+            var campaign = campaigns.data[i];
+            var _temp = campaignSubscriberFactory(campaign)
 
-    var _series = []
-      for (var i in campaigns.data){
-       // console.log(util.inspect(i))
-        var campaign = campaigns.data[i];
+            _series.push(_temp)
+              }
 
+            async.series(_series,function(err, results){
+              console.log(util.inspect(results[0], false , null));
+            })
+        }
+});
+
+ function campaignSubscriberFactory(camp){
+      var campaign = camp
         var temp = function(callback){
+          console.log(campaign.title)
             // creates function to run in series for mailchimp export api...
               exportApi.campaignSubscriberActivity({ id: campaign['id']  }, function (error, data) {
                     if (error)
                         console.log(error.message);
                     else{
                         var JSON = data
-                            for (obj in data){
-                               //console.log(data[obj])
-                            }
-                           // console.log(JSON[Object.keys(JSON)[0]])
-                            //console.log(util.inspect(campaign, false, null))
-                        }
                         campaign.activity = JSON
+                        console.log(util.inspect(campaign.activity, false , null))
                         callback(null, campaign)
+                           // console.log(JSON[Object.keys(JSON)[0]])
+                           //console.log(util.inspect(campaign, false, null))
+                        }
+
                     })
-                }.bind(campaign)
-            _series.push(temp)
-          }
+                }
 
-    async.series(_series,function(err, results){
+              return temp;
+    }
 
-        console.log(util.inspect(results[0], false , null));
-        })
-
-
-});
