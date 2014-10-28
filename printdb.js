@@ -17,9 +17,7 @@ mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
 
 CampaignSchema.find({}, function(error, objs){
-	console.log('running');
-		
+		console.log('running');
 		console.log(objs[0].topLinks())
-	
 	db.close()
 })

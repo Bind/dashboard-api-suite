@@ -51,8 +51,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', function(req,res){
 
     CampaignSchema.find({}, function(error, objs){
-            var data = objs.filter(function(el, ind, arr){
-                return arr[ind] = el.baseStats();
+            var data = [];
+            objs.filter(function(el, ind, arr){
+                data.push(el.serve());
             })
             res.render('index',{title: "DashBoard", data: data})
         

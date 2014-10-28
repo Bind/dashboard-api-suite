@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var util = require('util')
+
 var campaignSchema = mongoose.Schema({
   id: String,
   web_id: Number,
@@ -116,9 +117,6 @@ campaignSchema.methods.topLinks = function(){
                         clicks: cleaned[url].clicks
                       })
                  }
-
-
-
         return _cleaned;
 }
 
@@ -131,6 +129,13 @@ campaignSchema.methods.userOpens = function (){
                 return el['opens'] = opens;
           })
         return cleaned;
+}
+
+campaignSchema.methods.serve = function(){
+    var base = this.baseStats()
+    base.Opens = this.userOpens();
+    base.Clicks = this.topLinks();
+    return base;
 }
 
 var Campaign = mongoose.model('Campaign',campaignSchema);
