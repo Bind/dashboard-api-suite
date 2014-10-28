@@ -21,7 +21,7 @@ var campaignSchema = mongoose.Schema({
   archive_url: String,
   archive_url_long: String,
   emails_sent: Number,
-  inline_css: Number,
+  inline_css: Boolean,
   analytics: String,
   analytics_tag: String,
   authenticate: Boolean,

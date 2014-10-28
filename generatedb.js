@@ -20,7 +20,7 @@ var MailChimpAPI = require('mailchimp').MailChimpAPI
 
 mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
-db.close()
+
 
 var apiKey = "c81c75dd03cb0188beed09690c0dabfa-us3";
 var Fintech_Live = 'f8eef5625a'
@@ -43,9 +43,7 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
     else{
         var _series = []
           for (var i in campaigns.data){
-           console.log(util.inspect(i))
             var campaign = campaigns.data[i];
-            console.log(campaign.title)
             if (campaign.title != "TESTING MC DO NOT SEND" && campaign.title != "Weekly Roundup (June 20) (copy 01)"){
               var _temp = campaignSubscriberFactory(campaign)
               _series.push(_temp)
@@ -53,10 +51,13 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
               }
 
             async.series(_series,function(err, results){
-              console.log(util.inspect(results, false , null));
+              console.log("sync complete");
+              db.close()
             })
         }
 });
+
+
 
  function campaignSubscriberFactory(camp){
       var campaign = camp
@@ -68,17 +69,50 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
                         console.log(error.message);
                       } else{
                         var JSON = data  
-                        campaign.activity = JSON
-                        console.log(campaign.title)
-                        //nsole.log(util.inspect(campaign.activity, false , null))
-                        callback(null, campaign)
-                           // console.log(JSON[Object.keys(JSON)[0]])
-                           //console.log(util.inspect(campaign, false, null))
+                        cleanActions(JSON, function(err, actions){
+                                campaign.activity = actions;
+                                // console.log(JSON)
+                          new Campaign(campaign).save(function(err){
+                            if(err){
+                              console.log(err)
+                              callback(new Error('unable to save campaign'), null)
+                            }else {
+                              console.log(campaign.title + ' was saved.')
+                            callback(null, campaign)
+                                  };
+                              })
+                          });
+                      
+                        
                         }
-
                     })
                 }
 
               return temp;
     }
+
+function cleanActions(actions, callback){
+
+    if (typeof callback != 'function'){
+      callback(new Error("callback needs to be a function"))
+    }
+    else if (actions.length === 0 ){
+      callback(new Error("actions is empty"))
+    }
+
+    var cleaned = []
+    for (var user in actions){
+        var email = Object.keys(actions[user])[0]
+        cleaned.push({ user: email,
+                       actions: actions[email]
+                      })
+                 }
+    callback(null, cleaned);
+
+
+
+
+}
+
+
 

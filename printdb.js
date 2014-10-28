@@ -17,8 +17,8 @@ mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
 
 CampaignSchema.find(function(error, objs){
-	for (item in objs){
-		console.log(objs[item].name)
+		for (item in objs){
+		console.log(objs[item].title)
 	}
 	db.close()
 })
