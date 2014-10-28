@@ -8,10 +8,19 @@ var util = require('util')
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var mongoose = require("mongoose");
 var MailChimpExportAPI = require('mailchimp').MailChimpExportAPI
 var MailChimpAPI = require('mailchimp').MailChimpAPI
 
+var CampaignSchema = require('./models/campaign').Campaign
+
+var mongooseUrl =
+    process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL ||
+    'mongodb://localhost/MyDatabase';
+
+mongoose.connect(mongooseUrl);
+var db = mongoose.connection;
 
 var app = express();
 var apiKey = "c81c75dd03cb0188beed09690c0dabfa-us3";
@@ -39,46 +48,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', function(req,res ){
+app.use('/', function(req,res){
 
-api.call('campaigns', 'list', { list_id: Fintech_Live, start: 0, limit: 25 }, function (error, data) {
-    if (error)
-        console.log(error);
-    else{
-       // console.log(data); // Do something with your data!
-       res.render('index',{title: "DashBoard", data: data.data})
+    CampaignSchema.find({}, function(error, objs){
+            var data = objs.filter(function(el, ind, arr){
+                return arr[ind] = el.baseStats();
+            })
+            res.render('index',{title: "DashBoard", data: data})
+        
+            })          
+        })
 
-       /*var campaign = data.data[0];
-
-            exportApi.campaignSubscriberActivity({ id: campaign['id']  }, function (error, data) {
-                    if (error)
-                        console.log(error.message);
-                    else{
-                        var JSON = {}
-                            for (obj in data){
-                              //  console.log(data[obj])
-                                var email = Object.keys(data[obj])[0]
-                               // console.log(email)
-                                for (action in data[obj][email]){
-                                    var hash = data[obj][email][action].timestamp + '_' + email
-                                    data[obj][email][action].user = email;
-                                    JSON[hash] = data[obj][email][action]
-                                }
-                            }
-                           // console.log(JSON[Object.keys(JSON)[0]])
-                            console.log(util.inspect(campaign, false, null))
-
-                            campaign.actions = JSON;
-                            res.render('index',{title: "DashBoard", data: data.data})
-                    }
-
-            })//*/
-
-        }
-    });
-
-
-})
 app.use('/users', users);
 
 

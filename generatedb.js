@@ -21,6 +21,9 @@ var MailChimpAPI = require('mailchimp').MailChimpAPI
 mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
 
+Campaign.remove({}, function(err) { 
+   console.log('collection removed') 
+});
 
 var apiKey = "c81c75dd03cb0188beed09690c0dabfa-us3";
 var Fintech_Live = 'f8eef5625a'
@@ -104,7 +107,7 @@ function cleanActions(actions, callback){
     for (var user in actions){
         var email = Object.keys(actions[user])[0]
         cleaned.push({ user: email,
-                       actions: actions[email]
+                       actions: actions[user][email]
                       })
                  }
     callback(null, cleaned);

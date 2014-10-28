@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-
+var util = require('util')
 var campaignSchema = mongoose.Schema({
   id: String,
   web_id: Number,
@@ -80,11 +80,57 @@ var campaignSchema = mongoose.Schema({
 campaignSchema.methods.baseStats = function baseStats(){
 	return {
 		id: this.id,
+    title: this.title,
 		date: this.send_time,
 		unique_opens: this.summary.unique_opens,
 		emails_sent: this.summary.emails_sent,
 		unique_clicks: this.summary.unique_clicks,
 		}
+}
+campaignSchema.methods.topLinks = function(){
+    //returns an dictionaries with links and number of clicks
+      var cleaned = {}
+
+      this.activity.filter(function(el, ind, arr){
+              var opens = 0;            
+              el.actions.forEach( function(el2, ind2, arr2){
+                            if (el2.action === 'click'){
+                                  if (typeof cleaned[el2.url] == 'undefined'){
+                                      cleaned[el2.url] = {
+                                        clicks: 1,
+                                        raw : [{'user': el.user, url:el2.url, timestamp:el2.timestamp}]
+                                      };
+                                  } else {
+                                      cleaned[el2.url].clicks++;
+                                      cleaned[el2.url].raw.push({'user': el.user, url:el2.url, timestamp:el2.timestamp})  
+                                    }
+                            }
+                          })
+          })
+  var _cleaned = []
+  var keys = Object.keys(cleaned)
+    for (var temp in keys){
+          var url = keys[temp];
+        _cleaned.push({ url: url,
+                        raw: cleaned[url].raw,
+                        clicks: cleaned[url].clicks
+                      })
+                 }
+
+
+
+        return _cleaned;
+}
+
+campaignSchema.methods.userOpens = function (){
+      var cleaned = this.activity.filter(function(el, ind, arr){   
+              var opens = 0;            
+              el.actions.forEach( function(el2, ind2, arr2){
+                            if (el2.action === 'open') opens++;
+                          })
+                return el['opens'] = opens;
+          })
+        return cleaned;
 }
 
 var Campaign = mongoose.model('Campaign',campaignSchema);

@@ -16,9 +16,10 @@ process.env.MONGOHQ_URL ||
 mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
 
-CampaignSchema.find(function(error, objs){
-		for (item in objs){
-		console.log(objs[item].title)
-	}
+CampaignSchema.find({}, function(error, objs){
+	console.log('running');
+		
+		console.log(objs[0].topLinks())
+	
 	db.close()
 })
