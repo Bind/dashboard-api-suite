@@ -37,7 +37,7 @@ try {
 }
 
 
-api.call('campaigns', 'list', {id:Fintech_Live,  }, function (error, campaigns) {
+api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News with Context"} }, function (error, campaigns) {
     if (error)
         console.log(error.message);
     else{
@@ -45,13 +45,15 @@ api.call('campaigns', 'list', {id:Fintech_Live,  }, function (error, campaigns) 
           for (var i in campaigns.data){
            console.log(util.inspect(i))
             var campaign = campaigns.data[i];
-            var _temp = campaignSubscriberFactory(campaign)
-
-            _series.push(_temp)
+            console.log(campaign.title)
+            if (campaign.title != "TESTING MC DO NOT SEND" && campaign.title != "Weekly Roundup (June 20) (copy 01)"){
+              var _temp = campaignSubscriberFactory(campaign)
+              _series.push(_temp)
+              }
               }
 
             async.series(_series,function(err, results){
-              console.log(util.inspect(results[0], false , null));
+              console.log(util.inspect(results, false , null));
             })
         }
 });
@@ -59,15 +61,16 @@ api.call('campaigns', 'list', {id:Fintech_Live,  }, function (error, campaigns) 
  function campaignSubscriberFactory(camp){
       var campaign = camp
         var temp = function(callback){
-          console.log(campaign.title)
+          //console.log(campaign.title)
             // creates function to run in series for mailchimp export api...
               exportApi.campaignSubscriberActivity({ id: campaign['id']  }, function (error, data) {
-                    if (error)
+                    if (error){
                         console.log(error.message);
-                    else{
-                        var JSON = data
+                      } else{
+                        var JSON = data  
                         campaign.activity = JSON
-                        console.log(util.inspect(campaign.activity, false , null))
+                        console.log(campaign.title)
+                        //nsole.log(util.inspect(campaign.activity, false , null))
                         callback(null, campaign)
                            // console.log(JSON[Object.keys(JSON)[0]])
                            //console.log(util.inspect(campaign, false, null))
