@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "preinstall":"node generatedb.js",
+    "preinstall": "node generatedb.js",
     "start": "node app.js"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "mongoose": "^3.8.17",
     "morgan": "~1.0.0",
     "querystring": "^0.2.0",
+    "request": "^2.47.0",
     "static-favicon": "~1.0.0",
     "util": "^0.10.3"
   },
