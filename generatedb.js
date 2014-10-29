@@ -41,8 +41,9 @@ try {
 
 
 api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News with Context"} }, function (error, campaigns) {
-    if (error)
+    if (error){
       //  console.log(error.message);
+    }
     else{
         var _series = []
           for (var i in campaigns.data){
@@ -69,7 +70,7 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
             // creates function to run in series for mailchimp export api...
               exportApi.campaignSubscriberActivity({ id: campaign['id']  }, function (error, data) {
                     if (error){
-                       // console.log(error.message);
+                        console.log(error.message);
                       } else{
                         var JSON = data  
                         cleanActions(JSON, function(err, actions){
