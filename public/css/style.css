@@ -1,6 +1,6 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  font: 10px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 * + * {
   margin-top: 20px; }
@@ -39,5 +39,19 @@ rect {
   background-color: white;
   padding: 20px;
   box-sizing: border-box; }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges; }
+
+.x.axis path {
+  display: none; }
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px; }
 
 /*# sourceMappingURL=style.css.map */
