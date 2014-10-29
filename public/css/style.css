@@ -1,57 +1,81 @@
 body {
-  padding: 50px;
+  background-color: #262425;
+  padding: 50px 0;
   font: 10px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
-* + * {
-  margin-top: 20px; }
+.main {
+  background-color: #262425;
+  color: white;
+  width: auto;
+  margin: 0 auto;
+  max-width: 960px; }
 
 a {
   color: #00B7FF; }
 
 svg {
-  border: 1px solid black; }
+  border-top: 2px solid #d7551a; }
+
+.stats {
+  border: none; }
 
 rect {
   fill: steelblue; }
 
 #mostRecent {
-  background-color: gray;
-  width: 100%;
-  padding: 20px 2%; }
+  background-color: #3c3a3b;
+  max-width: 960px;
+  display: block;
+  padding: 20px 2%;
+  overflow: hidden; }
 
-.Links {
-  margin-top: 0; }
+.Links, .Summary {
+  margin-bottom: 20px; }
 
-.Links, .Openers {
+.Links, .Openers, .Summary {
   display: inline-block;
   width: 30%;
-  background-color: white;
+  background-color: #262425;
   padding: 20px;
   vertical-align: top;
   box-sizing: border-box;
-  overflow: hidden; }
+  overflow: hidden;
+  border-top: 2px solid #d7551a; }
 
 .Rates {
-  display: inline-block;
-  width: 66%;
+  display: block;
   float: right;
   vertical-align: top;
-  background-color: white;
-  padding: 20px;
+  color: white;
+  background-color: #262425;
   box-sizing: border-box; }
 
-.axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: white;
   shape-rendering: crispEdges; }
 
-.x.axis path {
+text {
+  fill: white; }
+
+.axis path {
   display: none; }
+
+.shadow {
+  fill: #3c3a3b; }
 
 .line {
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5px; }
+
+.opens {
+  fill: none;
+  stroke: #d7551a;
+  stroke-width: 1.5px; }
+
+rect.opens {
+  fill: #d7551a;
+  stroke: none; }
 
 /*# sourceMappingURL=style.css.map */

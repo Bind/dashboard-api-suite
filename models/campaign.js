@@ -131,10 +131,22 @@ campaignSchema.methods.userOpens = function (){
         return cleaned;
 }
 
+campaignSchema.methods.trackingData = function(){
+   var data = [];      
+      var cleaned = this.activity.filter(function(el, ind, arr){                
+        el.actions.forEach( function(el2, ind2, arr2){
+             if (el2.action === 'open' || el2.action ==='click') {
+                  data.push({action: el2.action, timestamp: el2.timestamp, user: el2.user})
+              }
+        })
+      })
+   return data
+}
 campaignSchema.methods.serve = function(){
     var base = this.baseStats()
     base.Opens = this.userOpens();
     base.Clicks = this.topLinks();
+    base.tracking = this.trackingData();
     return base;
 }
 
