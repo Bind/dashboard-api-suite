@@ -22,7 +22,7 @@ mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
 
 Campaign.remove({}, function(err) { 
-   console.log('collection removed') 
+   //console.log('collection removed') 
 });
 
 var apiKey = "c81c75dd03cb0188beed09690c0dabfa-us3";
@@ -30,19 +30,19 @@ var Fintech_Live = 'f8eef5625a'
 try {
     var api = new MailChimpAPI(apiKey, { version : '2.0' });
 } catch (error) {
-    console.log(error.message);
+   // console.log(error.message);
 }
 
 try {
     var exportApi = new MailChimpExportAPI(apiKey, { version : '1.0', secure: false });
 } catch (error) {
-    console.log(error.message);
+    //console.log(error.message);
 }
 
 
 api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News with Context"} }, function (error, campaigns) {
     if (error)
-        console.log(error.message);
+      //  console.log(error.message);
     else{
         var _series = []
           for (var i in campaigns.data){
@@ -54,7 +54,7 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
               }
 
             async.series(_series,function(err, results){
-              console.log("sync complete");
+            //  console.log("sync complete");
               db.close()
             })
         }
@@ -69,7 +69,7 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
             // creates function to run in series for mailchimp export api...
               exportApi.campaignSubscriberActivity({ id: campaign['id']  }, function (error, data) {
                     if (error){
-                        console.log(error.message);
+                       // console.log(error.message);
                       } else{
                         var JSON = data  
                         cleanActions(JSON, function(err, actions){
@@ -77,10 +77,10 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
                                 // console.log(JSON)
                           new Campaign(campaign).save(function(err){
                             if(err){
-                              console.log(err)
+                             // console.log(err)
                               callback(new Error('unable to save campaign'), null)
                             }else {
-                              console.log(campaign.title + ' was saved.')
+                            //  console.log(campaign.title + ' was saved.')
                             callback(null, campaign)
                                   };
                               })
