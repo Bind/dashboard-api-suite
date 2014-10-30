@@ -10,11 +10,17 @@ body {
   margin: 0 auto;
   max-width: 960px; }
 
+.left-column {
+  float: left;
+  height: auto;
+  width: 30%; }
+
+.right-column {
+  height: auto;
+  float: right; }
+
 a {
   color: #00B7FF; }
-
-svg {
-  border-top: 2px solid #d7551a; }
 
 .stats {
   border: none; }
@@ -34,7 +40,7 @@ rect {
 
 .Links, .Openers, .Summary {
   display: inline-block;
-  width: 30%;
+  width: 100%;
   background-color: #262425;
   padding: 20px;
   vertical-align: top;
@@ -42,12 +48,16 @@ rect {
   overflow: hidden;
   border-top: 2px solid #d7551a; }
 
-.Rates {
+.Rates, .circleGraphs {
+  margin-bottom: 20px;
+  min-height: 20px;
+  width: 100%;
   display: block;
   float: right;
   vertical-align: top;
   color: white;
   background-color: #262425;
+  border-top: 2px solid #d7551a;
   box-sizing: border-box; }
 
 .axis line {

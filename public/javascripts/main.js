@@ -219,7 +219,7 @@ var drawRates = function(campaign, step){
 
         var svg = d3.select(".Rates").append("svg")
             .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom + 40 + barHeight + barSpacing);
+            .attr("height", height + margin.top + margin.bottom + 40 + barHeight );
         
 
 
@@ -230,7 +230,7 @@ var drawRates = function(campaign, step){
               .attr('transform', "translate("+(width/2)+ ","+ (-barSpacing/2) +")")
               .attr('text-anchor', 'middle')
               .attr('font-size','2em')
-              .text('Performance')
+              .text('Life Time Performance')
 
 
 
@@ -293,9 +293,20 @@ var drawlegend = function(){
 
 
  var transitionLineGraphFirstDay = function(campaign, step){
-        
+  lineGraph.remove()        
+lineGraph = svg.append("g")
+            .attr("transform", "translate(" + margin.left + "," + (margin.top+ barHeight ) + ")");
 
-      
+                        lineGraph.append('text')
+              .attr('transform', "translate("+(width/2)+ ","+ (-barSpacing/2) +")")
+              .attr('text-anchor', 'middle')
+              .attr('font-size','2em')
+              .text(function(){
+                if (step ===1){
+                    return "First Day Performance";
+                } else return "Life Time Per"
+              })
+
   var data = quantifyRateData(campaign.tracking, step);
   if(step === 1){
       data = data.filter(function(el){
@@ -329,28 +340,32 @@ var drawlegend = function(){
           y.domain(d3.extent(data, function(d) { return d.opens; }));
 
             
-            d3.select('.y.axis')
-                      .transition()
-                      .call(yAxis)
 
-            d3.select('.x.axis')
-                      .transition()
-                      .call(xAxis)
+            lineGraph.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + height + ")")
+              .call(xAxis);
 
-      clickGraph
+          lineGraph.append("g")
+              .attr("class", "y axis")
+              .call(yAxis)
+          
+           clickGraph = lineGraph.append("path")
               .datum(data)
-              .transition()
-              .attr("d", clicks)
-              .duration(500)
-              .ease("linear")
+              .attr("class", "line clicks")
+              .attr("d", clicks);
 
-      openGraph
+           openGraph = lineGraph.append("path")
               .datum(data)
-              .transition()
+              .attr("class", "opens")
               .attr("d", opens)
-              .duration(500)
-              .ease("linear")
-              
+
+           legend = lineGraph.append('g')
+                .attr('class', 'legend')
+                .attr('transform','translate(0,' +(height+ 40) +')')
+drawlegend()
+
+
   }
 var temp = 1;
   document.getElementById('mostRecent').addEventListener('click',function(){
