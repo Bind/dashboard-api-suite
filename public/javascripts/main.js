@@ -10,7 +10,7 @@ var init = function(){
     //opensOverTime(MostRecentCampaign(CAMPAIGNS).Opens)
     writeToSummary(currentCampaign)
     drawRates(currentCampaign, 5)
-    drawRadial(currentCampaign)
+    drawRadials(currentCampaign)
 
 }
 
@@ -375,14 +375,12 @@ var temp = 1;
  
 };
 
-var drawRadial = function(campaign){
+var drawRadials = function(campaign){
 
   var  bottom = campaign.emails_sent;
-        var  top = campaign.unique_opens;
-var percentage = top/bottom;
 
 
-var width = 250,
+var width = 500,
     height = 250,
     twoPi = 2 * Math.PI,
     progress = 0,
@@ -401,25 +399,30 @@ var svg = d3.select(".circleGraphs").append("svg")
     .attr("width", width)
     .attr("height", height)
   .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    .attr("transform", "translate(" + width / 4 + "," + height / 2 + ")");
 
+    var opens = svg.append("g")
+          .attr("class", "open-meter");
 
+    var clicks = svg.append("g")
+          .attr("class", "click-meter")
+          .attr("transform","translate(" + width/2 + ',0)')
 
+var drawRadial = function(g, data, label ){
 
-      var meter = svg.append("g")
-          .attr("class", "progress-meter");
+   var percentage = data[0]/data[1]
 
-      meter.append("path")
+      g.append("path")
           .attr("class", "background")
           .datum({endAngle: PI})
           .attr("d", arc);
 
-      var foreground = meter.append("path")
+      var foreground = g.append("path")
           .attr("class", "foreground")
           .datum({endAngle: 0})
           .attr("d", arc)
 
-      var text = meter.append("text")
+      var text = g.append("text")
           .attr("text-anchor", "middle")
           .attr("dy", ".35em");
 
@@ -427,11 +430,18 @@ var svg = d3.select(".circleGraphs").append("svg")
       foreground
           .transition()
           .duration(750)
-          .call(arcTween, (PI ))
+          .call(arcTween, (PI * percentage))
 
-      var text = meter.append("text")
+      var text = g.append("text")
           .attr("text-anchor", "middle")
           .attr("dy", ".35em");
+
+      var label = g.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("transform","translate(0,"+ (-height/3) + ")")
+                    .text(data[0] +label +  data[1])
+
+
 
 
           function arcTween(transition, newAngle){
@@ -444,9 +454,10 @@ var svg = d3.select(".circleGraphs").append("svg")
               }
             })
           }
-  
+    }
 
-    
+drawRadial(opens, [ campaign.unique_opens,bottom], " users opened of ")
+drawRadial(clicks, [campaign.unique_clicks, bottom], " users clicked articles of ")    
 }
 
 
