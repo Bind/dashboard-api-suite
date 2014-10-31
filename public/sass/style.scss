@@ -19,6 +19,7 @@ body {
 .right-column{
 	height: auto;
 	float: right;
+	width: 66%;
 }
 a {
   color: #00B7FF;
@@ -95,4 +96,19 @@ text{
 rect.opens {
   fill: #d7551a;
   stroke: none;
+}
+
+.progress-meter .background {
+  fill:  none;
+}
+
+.progress-meter .foreground {
+  fill: steelblue;
+}
+
+.progress-meter text {
+  font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+  font-size: 24px;
+  font-weight: 300;
 }

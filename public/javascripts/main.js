@@ -10,13 +10,10 @@ var init = function(){
     //opensOverTime(MostRecentCampaign(CAMPAIGNS).Opens)
     writeToSummary(currentCampaign)
     drawRates(currentCampaign, 5)
+    drawRadial(currentCampaign)
 
 }
 
-var openRate = function(campaign){
-
-
-}
 
 var writeToSummary = function(campaign){
   var html = "<h2>" + campaign.title + '</h1><p>Sent: ' + campaign.date + '</p>'
@@ -304,7 +301,7 @@ lineGraph = svg.append("g")
               .text(function(){
                 if (step ===1){
                     return "First Day Performance";
-                } else return "Life Time Per"
+                } else return "Life Time Performance"
               })
 
   var data = quantifyRateData(campaign.tracking, step);
@@ -377,4 +374,84 @@ var temp = 1;
 
  
 };
+
+var drawRadial = function(campaign){
+
+  var  bottom = campaign.emails_sent;
+        var  top = campaign.unique_opens;
+var percentage = top/bottom;
+
+
+var width = 250,
+    height = 250,
+    twoPi = 2 * Math.PI,
+    progress = 0,
+    total = 1308573, // must be hard-coded if server doesn't report Content-Length
+    formatPercent = d3.format(".0%");
+
+var PI = 2 * Math.PI;
+
+var arc = d3.svg.arc()
+    .startAngle(0)
+    .innerRadius(60)
+    .outerRadius(66);
+
+
+var svg = d3.select(".circleGraphs").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+
+
+      var meter = svg.append("g")
+          .attr("class", "progress-meter");
+
+      meter.append("path")
+          .attr("class", "background")
+          .datum({endAngle: PI})
+          .attr("d", arc);
+
+      var foreground = meter.append("path")
+          .attr("class", "foreground")
+          .datum({endAngle: 0})
+          .attr("d", arc)
+
+      var text = meter.append("text")
+          .attr("text-anchor", "middle")
+          .attr("dy", ".35em");
+
+
+      foreground
+          .transition()
+          .duration(750)
+          .call(arcTween, (PI ))
+
+      var text = meter.append("text")
+          .attr("text-anchor", "middle")
+          .attr("dy", ".35em");
+
+
+          function arcTween(transition, newAngle){
+            transition.attrTween("d", function(d){
+              var interpolate = d3.interpolate(d.endAngle, newAngle)
+              return function (t){
+                d.endAngle = interpolate(t)
+                text.text(formatPercent(d.endAngle/PI))
+                return arc(d)
+              }
+            })
+          }
+  
+
+    
+}
+
+
+
+
+
+
 

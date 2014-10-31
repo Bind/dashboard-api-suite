@@ -48,7 +48,8 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
         var _series = []
           for (var i in campaigns.data){
             var campaign = campaigns.data[i];
-            if (campaign.title != "TESTING MC DO NOT SEND" && campaign.title != "Weekly Roundup (June 20) (copy 01)"){
+            console.log(campaign.title)
+            if (campaign.title != "TESTING MC DO NOT SEND" && campaign.title != "Weekly Roundup (June 20) (copy 01)" && campaign.title != "Weekly Roundup (Nov 1)"){
               var _temp = campaignSubscriberFactory(campaign)
               _series.push(_temp)
               }
