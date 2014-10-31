@@ -1,4 +1,7 @@
 
+$bodyBG : rgb(38, 36, 37); 
+$mainBG : rgb(60, 58, 59);
+
 body {
   background-color: rgb(38, 36, 37);
   padding: 50px 0;
@@ -98,14 +101,22 @@ rect.opens {
   stroke: none;
 }
 
-.progress-meter .background {
-  fill:  none;
+.background {
+  fill:  $mainBG;
+}
+.percentage{
+	font-size: 24px;
+}
+.open-meter .foreground {
+  fill: orange;
+}
+.progess-meter .foreground{
+	fill: green;
 }
 
-.progress-meter .foreground {
+.click-meter .foreground {
   fill: steelblue;
 }
-
 .progress-meter text {
   font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
 

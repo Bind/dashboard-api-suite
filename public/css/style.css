@@ -89,10 +89,19 @@ rect.opens {
   fill: #d7551a;
   stroke: none; }
 
-.progress-meter .background {
-  fill: none; }
+.background {
+  fill: #3c3a3b; }
 
-.progress-meter .foreground {
+.percentage {
+  font-size: 24px; }
+
+.open-meter .foreground {
+  fill: orange; }
+
+.progess-meter .foreground {
+  fill: green; }
+
+.click-meter .foreground {
   fill: steelblue; }
 
 .progress-meter text {

@@ -380,7 +380,7 @@ var drawRadials = function(campaign){
   var  bottom = campaign.emails_sent;
 
 
-var width = 500,
+var width = 600,
     height = 250,
     twoPi = 2 * Math.PI,
     progress = 0,
@@ -399,18 +399,24 @@ var svg = d3.select(".circleGraphs").append("svg")
     .attr("width", width)
     .attr("height", height)
   .append("g")
-    .attr("transform", "translate(" + width / 4 + "," + height / 2 + ")");
+    .attr("transform", "translate(" + (50 + width / 6) + "," + height / 2 + ")");
 
     var opens = svg.append("g")
           .attr("class", "open-meter");
 
     var clicks = svg.append("g")
           .attr("class", "click-meter")
-          .attr("transform","translate(" + width/2 + ',0)')
+          .attr("transform","translate(" + width/4 + ',0)')
+
+    var third = svg.append("g")
+            .attr("class", "progess-meter")
+            .attr("transform","translate(" + width/2 + ',0)')
+
 
 var drawRadial = function(g, data, label ){
 
    var percentage = data[0]/data[1]
+   var margin = {left:50, right:50, top: 10, bottom: 10};
 
       g.append("path")
           .attr("class", "background")
@@ -433,6 +439,7 @@ var drawRadial = function(g, data, label ){
           .call(arcTween, (PI * percentage))
 
       var text = g.append("text")
+          .attr("class", "percentage")
           .attr("text-anchor", "middle")
           .attr("dy", ".35em");
 
@@ -457,7 +464,8 @@ var drawRadial = function(g, data, label ){
     }
 
 drawRadial(opens, [ campaign.unique_opens,bottom], " users opened of ")
-drawRadial(clicks, [campaign.unique_clicks, bottom], " users clicked articles of ")    
+drawRadial(clicks, [campaign.unique_clicks, bottom], " users clicked articles of ")  
+drawRadial(third, [89, 100], " Fake Data of ")  
 }
 
 
