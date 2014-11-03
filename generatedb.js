@@ -49,7 +49,7 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
           for (var i in campaigns.data){
             var campaign = campaigns.data[i];
             console.log(campaign.title)
-            if (campaign.title != "TESTING MC DO NOT SEND" && campaign.title != "Weekly Roundup (June 20) (copy 01)" && campaign.title != "Weekly Roundup (Nov 1)"){
+            if (campaign.title != "TESTING MC DO NOT SEND" && campaign.title != "Weekly Roundup (June 20) (copy 01)" ){
               var _temp = campaignSubscriberFactory(campaign)
               _series.push(_temp)
               }
@@ -82,7 +82,7 @@ api.call('campaigns', 'list', {id:Fintech_Live, filters:{subject: "Curated News 
                              // console.log(err)
                               callback(new Error('unable to save campaign'), null)
                             }else {
-                            //  console.log(campaign.title + ' was saved.')
+                             console.log(campaign.title + ' was saved.')
                             callback(null, campaign)
                                   };
                               })
