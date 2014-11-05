@@ -95,7 +95,7 @@ campaignSchema.methods.topLinks = function(){
       this.activity.filter(function(el, ind, arr){
               var opens = 0;            
               el.actions.forEach( function(el2, ind2, arr2){
-                            if (el2.action === 'click'){
+                  if (el2.action === 'click'){
                                   if (typeof cleaned[el2.url] == 'undefined'){
                                       cleaned[el2.url] = {
                                         clicks: 1,

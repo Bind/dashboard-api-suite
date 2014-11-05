@@ -1,0 +1,10 @@
+//sessions by country and region
+"https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A82842165&dimensions=ga%3Acountry%2Cga%3Aregion&metrics=ga%3Asessions&sort=-ga%3Asessions&start-date=2014-10-21&end-date=2014-11-04&max-results=50"
+//sessions new versus returning
+"https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A82842165&dimensions=ga%3AuserType&metrics=ga%3Asessions&start-date=2014-10-21&end-date=2014-11-04&max-results=50"
+
+//session new versus return over time 
+"https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A82842165&dimensions=ga%3Adate%2Cga%3AuserType&metrics=ga%3Asessions%2Cga%3Apageviews&start-date=2014-10-21&end-date=2014-11-04&max-results=50"
+
+//new user data date, source, total users
+'https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A82842165&dimensions=ga%3AuserType%2Cga%3Adate%2Cga%3Asource%2Cga%3AfullReferrer&metrics=ga%3AnewUsers&start-date=2012-10-21&end-date=2014-11-04&max-results=1000'
