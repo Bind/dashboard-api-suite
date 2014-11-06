@@ -61,6 +61,8 @@ mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
 updateCampaigns(db)
 
+setInterval(updateCampaigns, 120000, db);
+
 var app = express();
 var apiKey = "c81c75dd03cb0188beed09690c0dabfa-us3";
 var Fintech_Live = 'f8eef5625a'
