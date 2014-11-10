@@ -36,6 +36,27 @@ svg{
 rect{
 	fill: steelblue;
 }
+.main{
+    background-color:rgb(60, 58, 59); 
+    max-width: 960px;
+    display: block;
+    padding: 20px 2%;
+    overflow: hidden; 
+}
+
+.main  section{
+    margin-bottom: 20px;
+    min-height: 20px;
+    width: 100%;
+    display: block;
+    float: right;
+    vertical-align: top;
+    color: white;
+    background-color: rgb(38, 36, 37);
+    border-top: 2px solid #d7551a;
+    box-sizing: border-box;
+}
+
 
 #mostRecent{
 	background-color:rgb(60, 58, 59); 

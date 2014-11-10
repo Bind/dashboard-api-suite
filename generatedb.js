@@ -1,4 +1,6 @@
-var apiKey = "c81c75dd03cb0188beed09690c0dabfa-us3";
+var dotenv = require('dotenv')
+
+
 var async = require("async");
 var express = require('express');
 var app = express();
@@ -27,8 +29,8 @@ var updateDB = function(db) {
     });
 
 
-    var apiKey = "c81c75dd03cb0188beed09690c0dabfa-us3";
-    var Fintech_Live = 'f8eef5625a'
+    var apiKey = process.env.MC_APIKEY;
+    var Fintech_Live = process.env.MC_FINTECH_LIVE
     try {
         var api = new MailChimpAPI(apiKey, {
             version: '2.0'
@@ -59,7 +61,6 @@ var updateDB = function(db) {
             var _series = []
             for (var i in campaigns.data) {
                 var campaign = campaigns.data[i];
-                console.log(campaign.title)
                 var _temp = campaignSubscriberFactory(campaign)
                 _series.push(_temp)
 

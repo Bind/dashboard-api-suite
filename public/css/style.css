@@ -29,6 +29,25 @@ a {
 rect {
   fill: steelblue; }
 
+.main {
+  background-color: #3c3a3b;
+  max-width: 960px;
+  display: block;
+  padding: 20px 2%;
+  overflow: hidden; }
+
+.main section {
+  margin-bottom: 20px;
+  min-height: 20px;
+  width: 100%;
+  display: block;
+  float: right;
+  vertical-align: top;
+  color: white;
+  background-color: #262425;
+  border-top: 2px solid #d7551a;
+  box-sizing: border-box; }
+
 #mostRecent {
   background-color: #3c3a3b;
   max-width: 960px;

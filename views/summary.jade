@@ -7,14 +7,11 @@ block js_load
           var DATA = !{JSON.stringify(data)};
 
 block content
+    header
     .main
       h1 Welcome to #{title}
-      div#mostRecent
-        .right-column
-            div.circleGraphs
-            div.Rates
-        .left-column         
-             div.Summary.pieChart
-             div.Links
-             div.Openers
+      section.NewsLetter
+         h5 Newsletter
+      section.SplashPage
+      section.Platform
      
