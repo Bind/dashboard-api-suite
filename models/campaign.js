@@ -1,5 +1,19 @@
 var mongoose = require("mongoose");
-var util = require('util')
+var util = require('util');
+var d3 = require('d3');
+
+var clipTimeDay = function(_time, format, _format) {
+    /*
+    the date string in _time
+    a string of d3.js timestamp formatting for format
+    */
+    var format = d3.time.format(format)
+    var current = format.parse(_time).getTime()
+    current -= current % (86400000);
+    var newFormat = d3.time.format(_format)
+    return newFormat(new Date(current))
+}
+
 
 var campaignSchema = mongoose.Schema({
     id: String,
@@ -174,8 +188,14 @@ campaignSchema.methods.opens = function() {
         })
     })
     return data
+}
 
+campaignSchema.methods.openRate = function() {
 
+    return {
+        timestamp: clipTimeDay(this.send_time, "%Y-%m-%d %X", "%Y%m%d"),
+        total: (this.summary.unique_opens / this.summary.emails_sent * 100)
+    }
 }
 campaignSchema.methods.clicks = function() {
     var data = [];
@@ -189,9 +209,24 @@ campaignSchema.methods.clicks = function() {
         })
     })
     return data
-
-
 }
+
+campaignSchema.methods.clickRate = function() {
+
+    return {
+        timestamp: clipTimeDay(this.send_time, "%Y-%m-%d %X", "%Y%m%d"),
+        total: (this.summary.unique_clicks / this.summary.emails_sent * 100)
+    }
+}
+
+
+campaignSchema.methods.SubGrowth = function() {
+    return {
+        timestamp: clipTimeDay(this.send_time, "%Y-%m-%d %X", "%Y%m%d"),
+        total: this.summary.emails_sent,
+    }
+}
+
 campaignSchema.methods.serve = function() {
     var base = this.baseStats()
     base.Opens = this.userOpens();
@@ -203,21 +238,39 @@ campaignSchema.methods.serve = function() {
 campaignSchema.statics.Summary = function(cb) {
 
     var summary = {
-        recipients: 0,
+        total_recipients: 0,
         unique_opens: 0,
         unique_clicks: 0,
-        clicks: [],
-        opens: [],
+        clickRates: [],
+        openRates: [],
+        recipients: []
+
     }
     Campaign.find({}, function(err, campaigns) {
 
         campaigns.forEach(function(campaign) {
-            summary.recipients += campaign.summary.emails_sent;
+            summary.total_recipients += campaign.summary.emails_sent;
             summary.unique_opens += campaign.summary.unique_opens;
             summary.unique_clicks += campaign.summary.unique_clicks;
-            summary.clicks = summary.clicks.concat(campaign.clicks());
-            summary.opens = summary.opens.concat(campaign.opens());
+            summary.clickRates.push(campaign.clickRate())
+            summary.openRates.push(campaign.openRate())
+            summary.recipients.push(campaign.SubGrowth())
+
         })
+
+        summary.recipients.sort(function(curr, prev) {
+            var format = d3.time.format('%Y%m%d')
+            return format.parse(curr.timestamp).getTime() - format.parse(prev.timestamp).getTime()
+        })
+        summary.clickRates.sort(function(curr, prev) {
+            var format = d3.time.format('%Y%m%d')
+            return format.parse(curr.timestamp).getTime() - format.parse(prev.timestamp).getTime()
+        })
+        summary.openRates.sort(function(curr, prev) {
+            var format = d3.time.format('%Y%m%d')
+            return format.parse(curr.timestamp).getTime() - format.parse(prev.timestamp).getTime()
+        })
+
         cb(null, summary)
     })
 }

@@ -5,7 +5,7 @@ var init = function() {
 
     Openers(topOpeners(currentCampaign.Opens))
     Clickers(topArticles(currentCampaign.Clicks))
-    //opensOverTime(MostRecentCampaign(CAMPAIGNS).Opens)
+        //opensOverTime(MostRecentCampaign(CAMPAIGNS).Opens)
     writeToSummary(currentCampaign)
     drawRates(currentCampaign, 5)
     drawRadials(currentCampaign)
@@ -98,8 +98,8 @@ var quantifyRateData = function(Tracking, step) {
                 'click': 0,
                 'open': 0
             }
-            prev[time][curr.action]++;
-        } else prev[time][curr.action]++;
+            prev[time][curr.action] ++;
+        } else prev[time][curr.action] ++;
         return prev;
     }, {})
     var _data = [];
@@ -149,8 +149,8 @@ var drawBar = function(graph, data, height, width, cl) {
         .attr("x", x(data[0]) - 8)
         .attr('y', barHeight / 2)
         .style('font-size', '1em')
-    //.style('fill', 'rgb(38, 36, 37)')
-    .attr("dy", ".3em")
+        //.style('fill', 'rgb(38, 36, 37)')
+        .attr("dy", ".3em")
         .style("text-anchor", "end")
         .text(percentage + '%');
 
@@ -280,7 +280,7 @@ var drawRates = function(campaign, step) {
         openKey.append('circle')
             .style('fill', '#d7551a')
             .attr('cy', 1) //one fourth of radius
-        .attr('r', 4)
+            .attr('r', 4)
 
         openKey.append("text")
             .attr("x", 8)
@@ -291,7 +291,7 @@ var drawRates = function(campaign, step) {
         clickKey.append('circle')
             .style('fill', 'steelblue')
             .attr('cy', 1) //one fourth of radius
-        .attr('r', 4)
+            .attr('r', 4)
 
         clickKey.append("text")
             .attr("x", 8)

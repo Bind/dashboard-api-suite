@@ -45,6 +45,7 @@ rect{
 }
 
 .main  section{
+    padding: 20px;
     margin-bottom: 20px;
     min-height: 20px;
     width: 100%;
@@ -127,6 +128,9 @@ rect.opens {
 }
 .percentage{
 	font-size: 24px;
+}
+.mainStat{
+    font-size: 36px;
 }
 .open-meter .foreground {
   fill: orange;

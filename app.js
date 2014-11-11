@@ -73,7 +73,7 @@ app.get('/', function(req, res) {
         },
         function(err, results) {
             res.render('summary', {
-                'title': "DashBoard",
+                'title': "Summary DashBoard",
                 'data': results
             })
         })

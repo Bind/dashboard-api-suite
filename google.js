@@ -2,7 +2,8 @@ var dotenv = require('dotenv');
 var async = require('async')
 dotenv.load()
 var util = require('util')
-    /*
+
+/*
  ** Need Error Handling for each pyublic Call
  
  */
@@ -46,14 +47,31 @@ var Analytics = (function() {
 
         //[date, new, total sessiosn]
     }
+    var pagesPerSession = function(callback) {
+        return publicCall('https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A82842165&dimensions=ga%3Adate&metrics=ga%3Asessions%2Cga%3Apageviews&start-date=2014-03-24&end-date=2014-11-11&max-results=1000',
+            callback)
+    }
 
     var getData = function(callback) {
         return async.parallel([
 
                 function(cb) {
-                    sessionsNewVersusReturning(function(err, res, body) {
+                    pagesPerSession(function(err, res, body) {
+                        var data = JSON.parse(body).rows
+                        var _data = [];
+                        for (var row in data) {
+                            console.log(data[row])
+                            var pagespersession = 0;
+                            if (data[row][1] != 0) {
+                                pagespersession = (parseInt(data[row][2]) / parseInt(data[row][1]))
+                            }
+                            _data.push({
+                                timestamp: data[row][0],
+                                total: pagespersession
+                            })
+                        }
                         cb(null, {
-                            'sessionsNewVersusReturning': JSON.parse(body).rows
+                            'pagesPerSession': _data
                         });
 
                     })
@@ -61,8 +79,16 @@ var Analytics = (function() {
 
                 function(cb) {
                     sessionsNewVersusReturningOT(function(err, res, body) {
+                        var data = JSON.parse(body).rows
+                        var _data = []
+                        for (row in data) {
+                            _data.push({
+                                timestamp: data[row][0],
+                                total: data[row][1]
+                            })
+                        }
                         cb(null, {
-                            'sessionsNewVersusReturningOT': JSON.parse(body).rows
+                            'sessionsOverTime': _data
                         });
                     })
                 }
@@ -92,7 +118,8 @@ var Analytics = (function() {
         sessionsByRegion: sessionsByRegion,
         sessionsNewVersusReturning: sessionsNewVersusReturning,
         sessionsNewVersusReturningOT: sessionsNewVersusReturningOT,
-        getData: getData
+        getData: getData,
+        pagesPerSession: pagesPerSession
     };
 
 
