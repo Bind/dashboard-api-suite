@@ -1,11 +1,14 @@
 var dotenv = require('dotenv');
 var async = require('async')
 dotenv.load()
-var util = require('util')
-
+var util = require('util');
+var d3 = require('d3');
 /*
  ** Need Error Handling for each pyublic Call
  
+IF you add another site, be sure to configure permissions on Google Analytics;
+
+
  */
 
 var request = require('google-oauth-jwt').requestWithJWT();
@@ -25,7 +28,7 @@ var Analytics = (function() {
                 scopes: [scopes]
             }
         }, function(err, res, body) {
-            return _callback(err, res, body);
+            _callback(err, res, body);
         })
     }
 
@@ -52,7 +55,58 @@ var Analytics = (function() {
             callback)
     }
 
-    var getData = function(callback) {
+    var platformSessionsOverTime = function(callback) {
+        return publicCall('https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A89836167&dimensions=ga%3AsessionCount%2Cga%3Adate&metrics=ga%3Asessions&start-date=2014-03-24&end-date=2014-11-13&max-results=1000',
+            callback)
+    }
+
+
+    var platformGetData = function(callback) {
+        async.parallel([
+            function(cb) {
+                platformSessionsOverTime(function(err, res, body) {
+                    try {
+                        var data = JSON.parse(body).rows;
+                        var _data = [];
+                        for (var row in data) {
+                            _data.push({
+                                timestamp: data[row][1],
+                                total: data[row][0]
+                            })
+                        }
+                        _data.sort(function(curr, prev) {
+                            var format = d3.time.format('%Y%m%d')
+                            return format.parse(curr.timestamp).getTime() - format.parse(prev.timestamp).getTime()
+                        })
+
+                    } finally {
+                        cb(null, {
+                            'sessionsOverTime': _data
+                        });
+                    }
+                })
+
+            },
+
+        ], function(err, results) {
+            var _results = {};
+
+            for (var dict in results) {
+                var key = Object.keys(results[dict])[0]
+                _results[key] = results[dict][key]
+            }
+            //console.log(_results)
+            try {
+                callback(err, _results)
+            } catch (e) {
+                callback(new Error('Platform JSON received was not parseable'), _results)
+            }
+        })
+
+    }
+
+
+    var splashGetData = function(callback) {
         return async.parallel([
 
                 function(cb) {
@@ -60,7 +114,6 @@ var Analytics = (function() {
                         var data = JSON.parse(body).rows
                         var _data = [];
                         for (var row in data) {
-                            console.log(data[row])
                             var pagespersession = 0;
                             if (data[row][1] != 0) {
                                 pagespersession = (parseInt(data[row][2]) / parseInt(data[row][1]))
@@ -79,34 +132,41 @@ var Analytics = (function() {
 
                 function(cb) {
                     sessionsNewVersusReturningOT(function(err, res, body) {
-                        var data = JSON.parse(body).rows
-                        var _data = []
-                        for (row in data) {
-                            _data.push({
-                                timestamp: data[row][0],
-                                total: data[row][1]
-                            })
+                        try {
+                            var data = JSON.parse(body).rows
+
+                            var _data = []
+                            for (var row in data) {
+                                _data.push({
+                                    timestamp: data[row][0],
+                                    total: data[row][1]
+                                })
+                            }
+
+                        } finally {
+                            cb(null, {
+                                'sessionsOverTime': _data
+                            });
                         }
-                        cb(null, {
-                            'sessionsOverTime': _data
-                        });
                     })
                 }
             ],
             function(err, results) {
                 //console.log(results)
-                //console.log(util.inspect(results))
+                /*console.log(util.inspect(results, {
+                    showHidden: true,
+                    depth: null
+                }))*/
+                //#This removes the encapsulating array
+
                 var _results = {};
                 for (var dict in results) {
                     var key = Object.keys(results[dict])[0]
                     _results[key] = results[dict][key]
                 }
                 //console.log(_results)
-                try {
-                    callback(err, JSON.parse(_results))
-                } catch (e) {
-                    callback(new Error('JSON received was not parseable'), _results)
-                }
+                callback(null, _results)
+
 
             })
 
@@ -118,7 +178,8 @@ var Analytics = (function() {
         sessionsByRegion: sessionsByRegion,
         sessionsNewVersusReturning: sessionsNewVersusReturning,
         sessionsNewVersusReturningOT: sessionsNewVersusReturningOT,
-        getData: getData,
+        splashGetData: splashGetData,
+        platformGetData: platformGetData,
         pagesPerSession: pagesPerSession
     };
 

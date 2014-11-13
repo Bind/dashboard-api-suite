@@ -18,12 +18,13 @@ var mongoose = require("mongoose");
 
 var google = {};
 google.analytics = require("./google").analytics;
+var mixpanel = require("./mixpanel").mixpanel
 
 //Mailchimp
 var MailChimpExportAPI = require('mailchimp').MailChimpExportAPI
 var MailChimpAPI = require('mailchimp').MailChimpAPI
 var CampaignSchema = require('./models/campaign').Campaign
-
+var FunnelSchema = require('./models/funnel').funnel
 
 var mongooseUrl =
     process.env.MONGOLAB_URI ||
@@ -31,13 +32,14 @@ var mongooseUrl =
     'mongodb://localhost/MyDatabase';
 
 
-var updateCampaigns = require('./generatedb').updateDB
+var generatedb = require('./generatedb').generateDB
 
 
 mongoose.connect(mongooseUrl);
 var db = mongoose.connection;
 
-setInterval(updateCampaigns, 120000, db);
+//generatedb(db)
+setInterval(generatedb, 120000, db);
 
 var app = express();
 
@@ -59,14 +61,23 @@ app.get('/auth', function(req, res) {
 app.get('/', function(req, res) {
 
     async.parallel({
-
             analytics: function(callback) {
-                google.analytics.getData(function(err, data) {
+                google.analytics.splashGetData(function(err, data) {
                     callback(err, data)
                 })
             },
             summary: function(callback) {
                 CampaignSchema.Summary(function(err, data) {
+                    callback(err, data)
+                })
+            },
+            funnels: function(callback) {
+                FunnelSchema.Summary(function(err, data) {
+                    callback(err, data)
+                })
+            },
+            platform: function(callback) {
+                google.analytics.platformGetData(function(err, data) {
                     callback(err, data)
                 })
             }

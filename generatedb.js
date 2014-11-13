@@ -20,8 +20,49 @@ var mongooseUrl =
 var MailChimpExportAPI = require('mailchimp').MailChimpExportAPI
 var MailChimpAPI = require('mailchimp').MailChimpAPI
 
+var mixpanel = require('./mixpanel').mixpanel
+var Funnel = require('./models/funnel').funnel
 
-var updateDB = function(db) {
+var generateDB = function(db) {
+    async.parallel([
+            function(callback) {
+                updateMixpanel(db, function(err, result) {
+                    callback(err, result)
+                })
+            },
+            function(callback) {
+                updateDB(db, function(err, results) {
+                    callback(err, results)
+                })
+            }
+        ],
+        function(err, results) {
+            console.log('DataBase Updated')
+        })
+
+}
+
+
+var updateMixpanel = function(db, cb) {
+    mixpanel.SignUpRate(function(err, data) {
+        if (err) {
+            cb(err, {})
+        } else {
+            Funnel.remove({}, function(err) {
+                new Funnel({
+                    data: data
+                }).save(function(err) {
+                    console.log('Updated Mixpanel Data')
+                    cb(err, 'Success')
+                })
+            })
+        }
+
+    })
+
+}
+
+var updateDB = function(db, finish) {
 
 
     Campaign.remove({}, function(err) {
@@ -68,6 +109,7 @@ var updateDB = function(db) {
 
             async.series(_series, function(err, results) {
                 //  console.log("sync complete");
+                finish(err, 'success')
 
             })
         }
@@ -128,4 +170,4 @@ var updateDB = function(db) {
 }
 
 
-exports.updateDB = updateDB
+exports.generateDB = generateDB
